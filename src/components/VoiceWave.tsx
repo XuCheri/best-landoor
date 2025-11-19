@@ -3,11 +3,13 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useTheme } from '../contexts/ThemeContext';
 import { useScroll } from '@react-three/drei';
+import { useSpeech } from '../contexts/SpeechContext'; // New import
 
 const vertexShader = `
   uniform float uTime;
   uniform float uAmplitude;
   uniform float uFrequency;
+  uniform float uVoiceAmplitude; // New uniform
 
   // Perlin 2D noise function
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -38,7 +40,7 @@ const vertexShader = `
   void main() {
     vec3 pos = position;
     float noise = snoise(vec2(pos.x * uFrequency + uTime, pos.z * uFrequency + uTime));
-    pos.y += noise * uAmplitude;
+    pos.y += noise * uAmplitude * uVoiceAmplitude; // Scale displacement by voice amplitude
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
   }
 `;
@@ -54,18 +56,29 @@ const VoiceWave = () => {
   const ref = useRef<any>();
   const { theme } = useTheme();
   const scroll = useScroll();
+  const { isListening } = useSpeech(); // New hook usage
 
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
     uColor: { value: new THREE.Color(theme.colors.primary) },
     uAmplitude: { value: 0.2 },
     uFrequency: { value: 0.5 },
+    uVoiceAmplitude: { value: 0.0 }, // New uniform
   }), [theme.colors.primary]);
 
   useFrame((state) => {
     if (ref.current) {
       ref.current.material.uniforms.uTime.value = state.clock.elapsedTime * 0.5;
       ref.current.material.uniforms.uColor.value.set(theme.colors.primary);
+
+      // Animate uVoiceAmplitude based on isListening state
+      if (isListening) {
+        // More dynamic when listening
+        ref.current.material.uniforms.uVoiceAmplitude.value = 0.5 + Math.sin(state.clock.elapsedTime * 10) * 0.5;
+      } else {
+        // Subtle animation when not listening
+        ref.current.material.uniforms.uVoiceAmplitude.value = 0.2 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
+      }
 
       // Animate visibility based on scroll
       const sectionStart = 2 / 4;

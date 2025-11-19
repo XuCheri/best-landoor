@@ -6,6 +6,7 @@ import Scene from './components/Scene';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
+import SpeechInteractionUI from './components/SpeechInteractionUI'; // New import
 
 function App() {
   return (
@@ -48,9 +49,7 @@ function App() {
 
               {/* Section 3: 语音交互 */}
               <div className="w-screen h-screen p-8 flex flex-col justify-center items-center">
-                <h2 className="text-4xl font-bold" style={{ fontFamily: 'var(--font-primary)' }}>
-                  实时语音交互
-                </h2>
+                <SpeechInteractionUI />
               </div>
 
               {/* Section 4: 用户评价 */}
