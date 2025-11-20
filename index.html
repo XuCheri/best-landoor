@@ -1,14 +1,371 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AuraLingua</title>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 英语 - 您的智能语言伙伴</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 设置 Tailwind 配置，使用 Inter 字体和自定义颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'apple-blue': '#007AFF', // 苹果系统蓝色
+                        'dark-gray': '#1C1C1E', // 苹果深色模式背景
+                        'light-gray': '#F2F2F7', // 苹果浅色模式背景
+                        'primary-teal': '#00C7BE', // 新增一个活泼的颜色来强调儿童/家庭
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    keyframes: {
+                        'slide-up': {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    },
+                    animation: {
+                        'slide-up': 'slide-up 0.8s ease-out forwards',
+                    }
+                },
+            }
+        }
+    </script>
+    <style>
+        /* 基础样式和滚动条隐藏（Apple风格） */
+        body {
+            background-color: #FFFFFF;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            overflow-x: hidden; /* 避免横向滚动条 */
+        }
+        
+        /* 滚动时的平滑过渡效果（用于 scroll-reveal） */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+        /* 模拟设备边框的内阴影 */
+        .device-mockup {
+            box-shadow: 
+                0 4px 60px rgba(0, 0, 0, 0.1), /* 主要柔和阴影 */
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5), /* 模拟玻璃高光 */
+                inset 0 0 0 1px rgba(0, 0, 0, 0.1); /* 模拟内边框阴影 */
+            background-color: #333;
+            border-radius: 40px;
+            overflow: hidden;
+            transform-style: preserve-3d; /* 启用 3D 变换 */
+            transition: transform 0.1s ease-out; /* 平滑过渡 */
+        }
+
+        /* 模拟屏幕内容 */
+        .mockup-screen {
+            /* 强调动画片的趣味性，使用更柔和的背景 */
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); 
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            color: #DBEAFE;
+            font-size: 1.125rem;
+            text-align: left;
+        }
+
+        /* 按钮的悬停效果 */
+        .cta-button {
+            transition: all 0.2s ease-in-out;
+            transform: scale(1.0);
+        }
+        .cta-button:hover {
+            transform: scale(1.03) translateY(-1px);
+            box-shadow: 0 10px 20px rgba(0, 122, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-gray-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="#" class="text-2xl font-bold tracking-tight text-apple-blue">AI 英语</a>
+                
+                <!-- 导航链接 -->
+                <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                    <a href="#home" class="hover:text-apple-blue transition duration-200">首页</a>
+                    <a href="#features" class="hover:text-apple-blue transition duration-200">核心模块</a>
+                    <a href="#download" class="hover:text-apple-blue transition duration-200">立即下载</a>
+                    <a href="#contact" class="hover:text-apple-blue transition duration-200">联系我们</a>
+                </nav>
+                
+                <!-- CTA 按钮 -->
+                <a href="#download" class="hidden sm:inline-flex px-4 py-2 text-sm font-semibold text-white bg-dark-gray rounded-full hover:bg-gray-700 transition duration-200">
+                    为孩子开启启蒙
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        
+        <!-- 英雄区 (Hero) - 强调动画和家庭 -->
+        <section id="home" class="relative overflow-hidden pt-20 pb-20 md:pt-32 md:pb-40 bg-light-gray">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                
+                <!-- 标题和副标题 -->
+                <div class="max-w-4xl mx-auto reveal-item">
+                    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-4 leading-none">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-apple-blue to-primary-teal">
+                            边看动画片边学英语
+                        </span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-500 mb-8 max-w-3xl mx-auto">
+                        AI 英语，围绕孩子喜爱的动画片，打造**“听、说、读”**场景化学习闭环，让启蒙教育有趣且高效。
+                    </p>
+                </div>
+
+                <!-- CTA 按钮组 -->
+                <div class="flex justify-center space-x-4 mb-16 reveal-item delay-200">
+                    <a href="#download" class="cta-button bg-apple-blue text-white px-8 py-3 rounded-xl font-semibold shadow-xl shadow-apple-blue/30">
+                        免费试用 7 天
+                    </a>
+                    <a href="#features" class="cta-button bg-white text-gray-900 px-8 py-3 rounded-xl font-semibold border border-gray-200 shadow-md hover:bg-gray-50">
+                        探索学习模块
+                    </a>
+                </div>
+
+                <!-- App 设备模型和视觉效果 -->
+                <div class="relative flex justify-center mt-12 reveal-item delay-400">
+                    <!-- 模拟 iPhone/iPad 边框，添加 parallax-target 类用于 JS 效果 -->
+                    <div id="parallax-target" class="device-mockup w-full max-w-3xl h-96 shadow-2xl transition duration-500 ease-in-out">
+                        <!-- 屏幕内容：模拟动画片播放界面和卡拉OK字幕 -->
+                        <div class="mockup-screen">
+                            <div class="text-xs font-medium text-white/80 mb-2 text-left">
+                                《布鲁伊》S01E01 - 泛听模式
+                            </div>
+                            <div class="flex-grow flex items-center justify-center bg-black/30 rounded-lg">
+                                <!-- 模拟视频播放区域 -->
+                                <svg class="w-16 h-16 text-white/70" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <!-- 模拟卡拉OK字幕效果，突出显示当前播放的单词 -->
+                                <p class="text-xl font-light">
+                                    <span class="text-white/60">Bluey is a</span> 
+                                    <span class="text-primary-teal font-semibold animate-pulse">
+                                        <span class="shadow-md">cute</span> 
+                                    </span> 
+                                    <span class="text-white/60">and funny dog.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 核心学习模块 (Features) - 听、说、读 -->
+        <section id="features" class="py-24 md:py-32 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <h2 class="text-3xl md:text-5xl font-bold text-center mb-16 reveal-item">打造“听、说、读”学习闭环</h2>
+
+                <!-- 3 栏功能网格 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    
+                    <!-- 模块 1：听力 (Listening) -->
+                    <div class="p-8 bg-light-gray rounded-3xl shadow-lg hover:shadow-2xl transition duration-300 reveal-item delay-100">
+                        <div class="text-apple-blue mb-4">
+                            <!-- SVG 耳机图标 -->
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 10a2 2 0 110 4 2 2 0 010-4zM7.464 12a7.5 7.5 0 0110.607 0M10 12h.01"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">模块一：场景化听力</h3>
+                        <p class="text-gray-600">
+                            从动画片的场景出发，提供**泛听**（理解剧情）和**精听**（卡拉OK字幕同步）两种模式，精准捕捉每一个单词的发音和语境。
+                        </p>
+                    </div>
+
+                    <!-- 模块 2：口语 (Speaking) -->
+                    <div class="p-8 bg-light-gray rounded-3xl shadow-lg hover:shadow-2xl transition duration-300 reveal-item delay-200">
+                        <div class="text-primary-teal mb-4">
+                            <!-- SVG 麦克风和用户图标 (角色扮演) -->
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15v2m0-6V4m0 0V3h2m-2 2h2m-1 7h2m-2 4h2M5 19h14M8 5h8M8 19h8m-4-10v4"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">模块二：互动式口语配音</h3>
+                        <p class="text-gray-600">
+                            选择您想扮演的动画角色，进行沉浸式配音练习。AI 自动填充其他角色台词，创造最真实的对话场景。
+                        </p>
+                    </div>
+
+                    <!-- 模块 3：阅读 (Reading) -->
+                    <div class="p-8 bg-light-gray rounded-3xl shadow-lg hover:shadow-2xl transition duration-300 reveal-item delay-300">
+                        <div class="text-apple-blue mb-4">
+                            <!-- SVG 书本图标 -->
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.5V2h-1m1 4.5v12a2 2 0 002 2h3a2 2 0 002-2v-9m-4-7a4 4 0 00-4 4v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7.5M12 6.5h1"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">模块三：分级阅读与解析</h3>
+                        <p class="text-gray-600">
+                            AI 根据 KET/PET/FCE 等标准改写阅读材料。支持**专注模式**，点击即时查词并加入个人词汇本，加速阅读能力提升。
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- AI 技术优势区 - 新增内容 -->
+        <section id="ai-tech" class="py-24 md:py-32 bg-light-gray">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-5xl font-bold text-center mb-20 reveal-item">
+                    AI 驱动，实现个性化学习
+                </h2>
+                <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    
+                    <div class="lg:order-1 reveal-item delay-100 p-6 bg-white rounded-3xl shadow-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 bg-primary-teal rounded-full flex items-center justify-center text-white mr-4">
+                                <!-- SVG 处理器图标 -->
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 10v4m14-4v4M9 10h6M9 14h6m-5-4v4"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold">智能场景化切片</h3>
+                        </div>
+                        <p class="text-gray-600">
+                            AI 大模型自动解析动画台词和剧情，将一整集内容切分成独立的、可重复练习的短小场景，提高学习效率。
+                        </p>
+                    </div>
+
+                    <div class="lg:order-2 reveal-item delay-200 p-6 bg-white rounded-3xl shadow-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 bg-apple-blue rounded-full flex items-center justify-center text-white mr-4">
+                                <!-- SVG 检查标记图标 -->
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold">高精度语音反馈</h3>
+                        </div>
+                        <p class="text-gray-600">
+                            采用先进的 ASR 技术，在您配音时实时判断朗读准确度。完成后提供发音、语法和用词的定制化纠错报告。
+                        </p>
+                    </div>
+
+                    <div class="lg:order-3 lg:col-span-2 reveal-item delay-300 p-6 bg-white rounded-3xl shadow-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center text-white mr-4">
+                                <!-- SVG 文档图标 -->
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold">难度分级与内容改写</h3>
+                        </div>
+                        <p class="text-gray-600">
+                            LLM 严格按照 KET、PET 等国际标准，对阅读材料进行难度改写，确保孩子始终处于“适度挑战”的最佳学习状态。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 呼吁下载区 (Download CTA) -->
+        <section id="download" class="py-24 md:py-32 bg-dark-gray text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal-item">
+                <h2 class="text-4xl md:text-6xl font-extrabold mb-6">
+                    让学习成为全家的乐趣
+                </h2>
+                <p class="text-xl text-gray-400 mb-10 max-w-3xl mx-auto">
+                    现在下载 AI 英语 App，开启您的专属 AI 导师之旅。前 7 天免费试用，无风险体验。
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <a href="#" class="cta-button bg-apple-blue text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl shadow-apple-blue/30">
+                        App Store 下载
+                    </a>
+                    <a href="#" class="cta-button bg-white text-dark-gray px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-200">
+                        加入内测计划 (Android)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 底部 -->
+    <footer id="contact" class="border-t border-gray-100 bg-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+            <p class="mb-4">
+                © 2024 AI 英语. 版权所有。
+            </p>
+            <div class="space-x-4">
+                <a href="#" class="hover:text-apple-blue">隐私政策</a>
+                <span>|</span>
+                <a href="#" class="hover:text-apple-blue">服务条款</a>
+                <span>|</span>
+                <a href="mailto:support@aienglish.com" class="hover:text-apple-blue">联系支持</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 实现炫酷丝滑特效 -->
+    <script>
+        // --- 1. 滚动视差效果 (Subtle Parallax) ---
+        const parallaxTarget = document.getElementById('parallax-target');
+
+        window.addEventListener('scroll', () => {
+            if (!parallaxTarget) return;
+
+            // 获取滚动距离
+            const scrollY = window.scrollY;
+            // 简单计算，使元素在向下滚动时稍微向上移动，制造视差错觉
+            const movement = scrollY * 0.05; 
+
+            // 限制最大移动距离，保持自然感
+            const limitedMovement = Math.min(movement, 20); 
+
+            // 应用 CSS 变换：轻微向上和轻微 3D 旋转
+            parallaxTarget.style.transform = `
+                translateY(-${limitedMovement}px) 
+                rotateX(1deg) 
+                scale(1.0)
+            `;
+        });
+
+        // --- 2. 滚动内容渐显 (Scroll Reveal) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealItems = document.querySelectorAll('.reveal-item');
+
+            const observerOptions = {
+                root: null, // 视口为根
+                rootMargin: '0px',
+                threshold: 0.1 // 元素 10% 进入视口时触发
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    // 如果元素进入视口
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // 动画结束后停止观察，提高性能
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            // 为每个需要渐显的元素添加观察者
+            revealItems.forEach(item => {
+                // 检查是否有延迟类，如果有，设置延迟
+                const delayMatch = [...item.classList].find(cls => cls.startsWith('delay-'));
+                if (delayMatch) {
+                    const delayMs = parseInt(delayMatch.replace('delay-', ''));
+                    item.style.transitionDelay = `${delayMs}ms`;
+                }
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
 </html>
